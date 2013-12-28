@@ -1,9 +1,11 @@
 /**
  * Controller fuer WinPHP
  * 
- * TODO: resize fuer content wenn maximiert/minimiert
- * JS-Handler fuer 2 Fenster kompatibel machen
+ * TODO: Position vor maximieren speichern resize fuer content wenn
+ * maximiert/minimiert JS-Handler fuer 2 Fenster kompatibel machen
  */
+
+var winpos = new Object();
 
 $(document).ready(function() {
 	// main function
@@ -64,18 +66,25 @@ $(document).ready(function() {
 	});
 	$(document).on("click", ".window_title_buttons#window_maximize", function() {
 		// Fenster maximieren
-		if (!$(this).parents(".window").hasClass("maximized")) {
-			$(this).parents(".window").css("left", "0px");
-			$(this).parents(".window").css("top", "0px");
-			$(this).parents(".window").css("width", $("#winmain").width() + "px");
-			$(this).parents(".window").css("height", $("#winmain").height() + "px");
-			$(this).parents(".window").resizable("destroy").draggable("destroy");
-			$(this).parents(".window").addClass("maximized");
+		taskname = $(this).parents(".window").prop("id").substr(7);
+		objwin = $(this).parents(".window");
+		if (!$(objwin).hasClass("maximized")) {
+			// maximize
+			winpos[taskname + "_left"] = $(objwin).css("left");
+			winpos[taskname + "_top"] = $(objwin).css("top");
+			$(objwin).css("left", "0px");
+			$(objwin).css("top", "0px");
+			$(objwin).css("width", $("#winmain").width() + "px");
+			$(objwin).css("height", $("#winmain").height() + "px");
+			$(objwin).resizable("destroy").draggable("destroy");
+			$(objwin).addClass("maximized");
 		} else {
-			taskname = $(this).parents(".window").prop("id").substr(7);
-			$(this).parents(".window").css("width", "400px");
-			$(this).parents(".window").css("height", "300px");
-			$(this).parents(".window").removeClass("maximized");
+			// restore
+			$(objwin).css("width", "400px");
+			$(objwin).css("height", "300px");
+			$(objwin).css("left", winpos[taskname + "_left"]);
+			$(objwin).css("top", winpos[taskname + "_top"]);
+			$(objwin).removeClass("maximized");
 			addWindowFunctionality(taskname);
 		}
 	});
