@@ -64,22 +64,35 @@ $(document).ready(function()
 	// -------------------------------
 	// WINDOW HANDLER
 	// -------------------------------
-	$(document).on("click", ".window_title_buttons#window_close", function()
+	$(document).on("mousedown", ".window_title_buttons#window_close", function()
 	{
 		// Fenster schlieﬂen
 		taskname = $(this).parents(".window").prop("id").substr(7);
 		removeTask(taskname);
 		$(this).parents(".window").remove();
 	});
-	$(document).on("click", ".window_title_buttons#window_minimize", function()
+	$(document).on("mousedown", ".window_title_buttons#window_minimize", function(event)
 	{
 		// Fenster minimieren
+		event.stopPropagation();
 		taskname = $(this).parents(".window").prop("id").substr(7);
 		$(this).parents(".window").css("display", "none");
+		bolActive = $("#window_" + taskname).hasClass("activetask");
 		removeActive(taskname);
-		alert($(".task").first().prop("id"));
+		if (bolActive)
+		{
+			// active task gets minimized, lets choose another
+			$(".window").each(function()
+			{
+				if ($(this).css("display") != "none")
+				{
+					setActive($(this).prop("id").substr(7));
+					return true;
+				}
+			});
+		}
 	});
-	$(document).on("click", ".window_title_buttons#window_maximize", function()
+	$(document).on("mousedown", ".window_title_buttons#window_maximize", function()
 	{
 		// Fenster maximieren
 		taskname = $(this).parents(".window").prop("id").substr(7);
@@ -150,7 +163,7 @@ function resizeContent()
 function createTask(taskname)
 {
 	var task = "";
-	task = '<div class="task" id="task_' + taskname + '" style="background-image:url(images/icon_app_' + taskname + '.png)">';
+	task = '<div class="task" id="task_' + taskname + '" style="background-image:url(modules/' + taskname + '/icon_app_' + taskname + '.png)">';
 	task += '<img src="images/icon_inactive.png">';
 	task += '</div>';
 
