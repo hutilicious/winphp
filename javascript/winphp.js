@@ -1,9 +1,8 @@
 /**
  * Controller fuer WinPHP
  * 
- * TODO: JS-Handler fuer 2 Fenster kompatibel machen,Alle Fenster resizen bei
- * resize, bring-to-front feature (maximized windows available), save window
- * size
+ * TODO: Alle Fenster resizen bei resize, save window size, read modules and set
+ * desktop icons, check if module has no app icon, arrange windows so that they are visible
  */
 
 var winpos = new Object();
