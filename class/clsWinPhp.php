@@ -11,8 +11,8 @@ class clsWinPhp
         echo '<head>' . NL;
         echo '<title>WinPHP 0.1</title>' . NL;
         echo '<link rel="shortcut icon" href="icon_winphp.ico" type="image/x-icon" />' . NL;
-        echo '<link rel="stylesheet" type="text/css" href="css/winphp.css">' . NL;
         echo '<link rel="stylesheet" type="text/css" href="css/smoothness/jquery-ui.css">' . NL;
+        echo '<link rel="stylesheet" type="text/css" href="css/winphp.css">' . NL;
         echo '<script type="text/javascript" src="javascript/jquery.js"></script>' . NL;
         echo '<script type="text/javascript" src="javascript/jquery-ui.js"></script>' . NL;
         echo '<script type="text/javascript" src="javascript/winphp.js"></script>' . NL;

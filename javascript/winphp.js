@@ -1,8 +1,9 @@
 /**
  * Controller fuer WinPHP
  * 
- * TODO: Position vor maximieren speichern resize fuer content wenn
- * maximiert/minimiert JS-Handler fuer 2 Fenster kompatibel machen
+ * TODO: JS-Handler fuer 2 Fenster kompatibel machen,Alle Fenster resizen bei
+ * resize, bring-to-front feature (maximized windows available), save window
+ * size
  */
 
 var winpos = new Object();
@@ -12,9 +13,7 @@ $(document).ready(function() {
 	resizeContent();
 
 	$(document).on("click", ".task", function(event) {
-
 		if ($(this).prop("id") != "task_home") {
-			// Tasks
 			// Fenster in den Vordergrund bringen + anzeigen
 			taskname = $(this).prop("id").substr(5);
 			if ($("#window_" + taskname).css("display") == "none") {
@@ -31,7 +30,6 @@ $(document).ready(function() {
 
 	});
 	$(document).on("mouseover", ".task", function(event) {
-
 		if ($(this).prop("id") != "task_home") {
 			$(this).find("img").prop("src", "images/icon_hover.png");
 		} else {
@@ -40,7 +38,6 @@ $(document).ready(function() {
 
 	});
 	$(document).on("mouseout", ".task", function(event) {
-
 		if ($(this).prop("id") != "task_home") {
 			if (!$(this).hasClass("activetask")) {
 				$(this).find("img").prop("src", "images/icon_inactive.png");
@@ -72,26 +69,39 @@ $(document).ready(function() {
 			// maximize
 			winpos[taskname + "_left"] = $(objwin).css("left");
 			winpos[taskname + "_top"] = $(objwin).css("top");
-			$(objwin).css("left", "0px");
-			$(objwin).css("top", "0px");
-			$(objwin).css("width", $("#winmain").width() + "px");
-			$(objwin).css("height", $("#winmain").height() + "px");
-			$(objwin).resizable("destroy").draggable("destroy");
-			$(objwin).addClass("maximized");
+			$(objwin).animate({
+				width : $("#winmain").width() + "px",
+				height : $("#winmain").height() + "px",
+				left : "0px",
+				top : "0px"
+			}, 50, function() {
+				$(objwin).find("div.window_content").css("height", ($(objwin).height() - $(objwin).find("div.window_title").height() - 2) + "px");
+				$(objwin).resizable("destroy").draggable("destroy");
+				$(objwin).addClass("maximized");
+			});
 		} else {
 			// restore
-			$(objwin).css("width", "400px");
-			$(objwin).css("height", "300px");
-			$(objwin).css("left", winpos[taskname + "_left"]);
-			$(objwin).css("top", winpos[taskname + "_top"]);
-			$(objwin).removeClass("maximized");
-			addWindowFunctionality(taskname);
+			$(objwin).animate({
+				width : "400px",
+				height : "300px",
+				left : winpos[taskname + "_left"],
+				top : winpos[taskname + "_top"]
+			}, 50, function() {
+				$(objwin).removeClass("maximized");
+				$(objwin).find("div.window_content").css("height", ($(objwin).height() - $(objwin).find("div.window_title").height() - 2) + "px");
+				addWindowFunctionality(taskname);
+			});
 		}
+	});
+	$(document).on("mousedown", ".window", function() {
+		taskname = $(this).prop("id").substr(7);
+		setActive(taskname);
 	});
 
 	createTask("music");
+	createTask("editor");
 	setActive("music");
-	// createWindow("editor");
+	createWindow("editor");
 	createWindow("music");
 });
 
@@ -150,8 +160,17 @@ function addWindowFunctionality(taskname) {
 }
 
 function setActive(taskname) {
+	$(".task").each(function() {
+		task = $(this).prop("id").substr(5);
+		removeActive(task);
+	});
+	$(".window").each(function() {
+		$(this).css("z-index", 100);
+	});
 	$("#task_" + taskname).find("img").prop("src", "images/icon_active.png");
 	$("#task_" + taskname).addClass("activetask");
+	$("#window_" + taskname).addClass("activetask");
+	$("#window_" + taskname).css("z-index", 101);
 }
 
 function removeActive(taskname) {

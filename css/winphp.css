@@ -45,6 +45,11 @@ html,body {
 	font-family: sans-serif;
 }
 
+/* bugfix negative window position */
+.ui-resizable {
+	position: absolute;
+}
+
 #wintaskbar {
 	height: 40px;
 	background: url(../images/taskbar_bg.png);
