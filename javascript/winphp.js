@@ -29,6 +29,18 @@ $(document).ready(function()
 		{
 			$("#window_" + taskname).css("display", "none");
 			removeActive(taskname);
+			if (bolActive)
+			{
+				// active task gets minimized, lets choose another
+				$(".window").each(function()
+				{
+					if ($(this).css("display") != "none")
+					{
+						setActive($(this).prop("id").substr(7));
+						return true;
+					}
+				});
+			}
 		}
 	});
 	$(document).on("mouseover", ".task", function(event)
