@@ -8,112 +8,147 @@
 
 var winpos = new Object();
 
-$(document).ready(function() {
+$(document).ready(function()
+{
 	// main function
 	resizeContent();
 
-	$(document).on("click", ".task", function(event) {
-		if ($(this).prop("id") != "task_home") {
-			// Fenster in den Vordergrund bringen + anzeigen
-			taskname = $(this).prop("id").substr(5);
-			if ($("#window_" + taskname).css("display") == "none") {
-				$("#window_" + taskname).css("display", "");
-				setActive(taskname);
-			} else {
-				$("#window_" + taskname).css("display", "none");
-				removeActive(taskname);
-			}
-		} else {
-			// Home
-			alert("home");
+	// -------------------------------
+	// TASKBAR HANDLER
+	// -------------------------------
+	$(document).on("click", ".task", function(event)
+	{
+		// Fenster in den Vordergrund bringen + anzeigen
+		taskname = $(this).prop("id").substr(5);
+		bolActive = $("#window_" + taskname).hasClass("activetask");
+		if ((!bolActive) || $("#window_" + taskname).css("display") == "none")
+		{
+			$("#window_" + taskname).css("display", "");
+			setActive(taskname);
 		}
-
-	});
-	$(document).on("mouseover", ".task", function(event) {
-		if ($(this).prop("id") != "task_home") {
-			$(this).find("img").prop("src", "images/icon_hover.png");
-		} else {
-			$(this).css("background-image", "url(images/icon_winphp_glow.png)");
-		}
-
-	});
-	$(document).on("mouseout", ".task", function(event) {
-		if ($(this).prop("id") != "task_home") {
-			if (!$(this).hasClass("activetask")) {
-				$(this).find("img").prop("src", "images/icon_inactive.png");
-			} else {
-				$(this).find("img").prop("src", "images/icon_active.png");
-			}
-		} else {
-			$(this).css("background-image", "url(images/icon_winphp.png)");
+		else
+		{
+			$("#window_" + taskname).css("display", "none");
+			removeActive(taskname);
 		}
 	});
+	$(document).on("mouseover", ".task", function(event)
+	{
+		$(this).find("img").prop("src", "images/icon_hover.png");
+	});
+	$(document).on("mouseout", ".task", function(event)
+	{
+		if (!$(this).hasClass("activetask"))
+		{
+			$(this).find("img").prop("src", "images/icon_inactive.png");
+		}
+		else
+		{
+			$(this).find("img").prop("src", "images/icon_active.png");
+		}
+	});
+	$(document).on("mouseover", ".homebutton", function(event)
+	{
+		$(this).css("background-image", "url(images/icon_winphp_glow.png)");
+	});
+	$(document).on("mouseout", ".homebutton", function(event)
+	{
+		$(this).css("background-image", "url(images/icon_winphp.png)");
+	});
 
-	$(document).on("click", ".window_title_buttons#window_close", function() {
+	$(document).on("click", ".homebutton", function(event)
+	{
+		// Todo Click on Home
+	});
+
+	// -------------------------------
+	// WINDOW HANDLER
+	// -------------------------------
+	$(document).on("click", ".window_title_buttons#window_close", function()
+	{
 		// Fenster schlieﬂen
 		taskname = $(this).parents(".window").prop("id").substr(7);
 		removeTask(taskname);
 		$(this).parents(".window").remove();
 	});
-	$(document).on("click", ".window_title_buttons#window_minimize", function() {
+	$(document).on("click", ".window_title_buttons#window_minimize", function()
+	{
 		// Fenster minimieren
 		taskname = $(this).parents(".window").prop("id").substr(7);
 		$(this).parents(".window").css("display", "none");
 		removeActive(taskname);
+		alert($(".task").first().prop("id"));
 	});
-	$(document).on("click", ".window_title_buttons#window_maximize", function() {
+	$(document).on("click", ".window_title_buttons#window_maximize", function()
+	{
 		// Fenster maximieren
 		taskname = $(this).parents(".window").prop("id").substr(7);
 		objwin = $(this).parents(".window");
-		if (!$(objwin).hasClass("maximized")) {
+		if (!$(objwin).hasClass("maximized"))
+		{
 			// maximize
 			winpos[taskname + "_left"] = $(objwin).css("left");
 			winpos[taskname + "_top"] = $(objwin).css("top");
-			$(objwin).animate({
+			$(objwin).animate(
+			{
 				width : $("#winmain").width() + "px",
 				height : $("#winmain").height() + "px",
 				left : "0px",
 				top : "0px"
-			}, 50, function() {
+			}, 50, function()
+			{
 				$(objwin).find("div.window_content").css("height", ($(objwin).height() - $(objwin).find("div.window_title").height() - 2) + "px");
 				$(objwin).resizable("destroy").draggable("destroy");
 				$(objwin).addClass("maximized");
 			});
-		} else {
+		}
+		else
+		{
 			// restore
-			$(objwin).animate({
+			$(objwin).animate(
+			{
 				width : "400px",
 				height : "300px",
 				left : winpos[taskname + "_left"],
 				top : winpos[taskname + "_top"]
-			}, 50, function() {
+			}, 50, function()
+			{
 				$(objwin).removeClass("maximized");
 				$(objwin).find("div.window_content").css("height", ($(objwin).height() - $(objwin).find("div.window_title").height() - 2) + "px");
 				addWindowFunctionality(taskname);
 			});
 		}
 	});
-	$(document).on("mousedown", ".window", function() {
+	$(document).on("mousedown", ".window", function()
+	{
 		taskname = $(this).prop("id").substr(7);
 		setActive(taskname);
 	});
 
+	// -------------------------------
+	// SOME MISC STUFF
+	// -------------------------------
 	createTask("music");
 	createTask("editor");
+	createTask("picture");
 	setActive("music");
 	createWindow("editor");
 	createWindow("music");
+	createWindow("picture");
 });
 
-$(window).resize(function() {
+$(window).resize(function()
+{
 	resizeContent();
 });
 
-function resizeContent() {
+function resizeContent()
+{
 	$("#winmain").css("height", $(window).height() - $("#wintaskbar").height() + "px");
 }
 
-function createTask(taskname) {
+function createTask(taskname)
+{
 	var task = "";
 	task = '<div class="task" id="task_' + taskname + '" style="background-image:url(images/icon_app_' + taskname + '.png)">';
 	task += '<img src="images/icon_inactive.png">';
@@ -122,11 +157,13 @@ function createTask(taskname) {
 	$("#wintaskbar").append(task);
 }
 
-function removeTask(taskname) {
+function removeTask(taskname)
+{
 	$("#task_" + taskname).remove();
 }
 
-function createWindow(taskname) {
+function createWindow(taskname)
+{
 	var window = "";
 	window = '<div class="window" id="window_' + taskname + '">';
 	window += '<div class="window_title">';
@@ -143,29 +180,32 @@ function createWindow(taskname) {
 	addWindowFunctionality(taskname);
 }
 
-function addWindowFunctionality(taskname) {
-	$("#window_" + taskname).draggable({
+function addWindowFunctionality(taskname)
+{
+	$("#window_" + taskname).draggable(
+	{
 		containment : "parent",
 		handle : "div.window_title",
 		cancel : "div.window_title_buttons"
-	}).resizable({
+	}).resizable(
+	{
 		minHeight : 300,
 		minWidth : 400,
 		maxHeight : $("#winmain").height(),
 		containment : "parent",
-		resize : function(event, ui) {
+		resize : function(event, ui)
+		{
 			$(this).find("div.window_content").css("height", ($(this).height() - $(this).find("div.window_title").height() - 2) + "px");
 		}
 	});
 }
 
-function setActive(taskname) {
-	$(".task").each(function() {
+function setActive(taskname)
+{
+	$(".task").each(function()
+	{
 		task = $(this).prop("id").substr(5);
 		removeActive(task);
-	});
-	$(".window").each(function() {
-		$(this).css("z-index", 100);
 	});
 	$("#task_" + taskname).find("img").prop("src", "images/icon_active.png");
 	$("#task_" + taskname).addClass("activetask");
@@ -173,7 +213,10 @@ function setActive(taskname) {
 	$("#window_" + taskname).css("z-index", 101);
 }
 
-function removeActive(taskname) {
+function removeActive(taskname)
+{
 	$("#task_" + taskname).find("img").prop("src", "images/icon_inactive.png");
 	$("#task_" + taskname).removeClass("activetask");
+	$("#window_" + taskname).css("z-index", 100);
+	$("#window_" + taskname).removeClass("activetask");
 }

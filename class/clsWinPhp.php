@@ -20,7 +20,7 @@ class clsWinPhp
         echo '<body>' . NL;
         echo '<div id="wintaskbar">' . NL;
         
-        echo '<div class="task" id="task_home" style="background-image:url(images/icon_winphp.png)"></div>' . NL;
+        echo '<div class="homebutton" id="task_home" style="background-image:url(images/icon_winphp.png)"></div>' . NL;
         
         echo '</div>' . NL;
         
