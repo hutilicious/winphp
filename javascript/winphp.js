@@ -2,7 +2,7 @@
  * Controller fuer WinPHP
  * 
  * TODO: resize fuer content wenn maximiert/minimiert
- * handler fuer 2 fenster kompatibel machen
+ * JS-Handler fuer 2 Fenster kompatibel machen
  */
 
 $(document).ready(function() {
