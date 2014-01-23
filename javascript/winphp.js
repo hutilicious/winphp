@@ -156,9 +156,6 @@ $(document).ready(function()
 	createTask("editor");
 	createTask("picture");
 	setActive("music");
-	createWindow("editor");
-	createWindow("music");
-	createWindow("picture");
 });
 
 $(window).resize(function()
@@ -179,6 +176,7 @@ function createTask(taskname)
 	task += '</div>';
 
 	$("#wintaskbar").append(task);
+	createWindow(taskname);
 }
 
 function removeTask(taskname)
