@@ -20,11 +20,11 @@ class clsWinPhp
         echo '<body>' . NL;
         echo '<div id="wintaskbar">' . NL;
         
-        echo '<div class="homebutton" id="task_home" style="background-image:url(images/icon_winphp.png)"></div>' . NL;
+        echo '<div class="homebutton" id="task_home" title="Startmenü" style="background-image:url(images/icon_winphp.png)"></div>' . NL;
+
+        echo '</div>' . NL; //wintaskbar
         
-        echo '</div>' . NL;
-        
-        echo '<div id="winmain"></div>' . NL;
+        echo '<div id="winmain"></div>' . NL; // winmain
         echo '</body>' . NL;
         echo '</html>';
     }
