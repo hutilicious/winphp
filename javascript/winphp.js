@@ -168,6 +168,9 @@ function resizeContent()
 	$("#winmain").css("height", $(window).height() - $("#wintaskbar").height() + "px");
 }
 
+//-------------------------------
+// WINDOW FUNCTIONS
+// -------------------------------
 function createTask(taskname)
 {
 	var task = "";
@@ -189,7 +192,7 @@ function createWindow(taskname)
 	var window = "";
 	window = '<div class="window" id="window_' + taskname + '">';
 	window += '<div class="window_title">';
-	window += '<div class="window_title_string">' + taskname + '</div>';
+	window += '<div class="window_title_string">' + ucfirst(taskname) + '</div>';
 	window += '<div class="window_title_buttons" id="window_close"><img src="images/window_button_close.png"></div>';
 	window += '<div class="window_title_buttons" id="window_maximize"><img src="images/window_button_maximize.png" width="10"></div>';
 	window += '<div class="window_title_buttons" id="window_minimize"><img src="images/window_button_minimize.png" width="10"></div>';
@@ -241,4 +244,14 @@ function removeActive(taskname)
 	$("#task_" + taskname).removeClass("activetask");
 	$("#window_" + taskname).css("z-index", 100);
 	$("#window_" + taskname).removeClass("activetask");
+}
+
+
+
+//-------------------------------
+//HELPING FUNCTIONS
+//-------------------------------
+function ucfirst(string)
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
