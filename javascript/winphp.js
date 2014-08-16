@@ -1,7 +1,7 @@
 /**
  * Controller fuer WinPHP
  * 
- * TODO: rewrite with objects 
+ * TODO: rewrite with objects, port to famo.us?
  * Alle Fenster resizen bei resize, save window size, read modules and set
  * desktop icons, check if module has no app icon, arrange windows so that they are visible
  */
