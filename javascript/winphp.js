@@ -1,7 +1,8 @@
 /**
  * Controller fuer WinPHP
  * 
- * TODO: Alle Fenster resizen bei resize, save window size, read modules and set
+ * TODO: rewrite with objects 
+ * Alle Fenster resizen bei resize, save window size, read modules and set
  * desktop icons, check if module has no app icon, arrange windows so that they are visible
  */
 
