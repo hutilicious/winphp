@@ -8,14 +8,14 @@
  */
 $(document).ready(function()
 {
-	WinPHP.init();
-	WinPHP.createWindow("music");
+	winphp.init();
+	winphp.createWindow("music");
 });
 
 //-------------------------------
 // WinPHP class
 //-------------------------------
-var WinPHP = new function()
+var winphp = new function()
 {
 	this.winpos = new Object();
 	
@@ -23,7 +23,7 @@ var WinPHP = new function()
 	{
 		$(window).resize(function()
 		{
-			WinPHP.resizeContent();
+			winphp.resizeContent();
 		});
 		
 		this.resizeContent();
@@ -38,12 +38,12 @@ var WinPHP = new function()
 			if ((!bolActive) || $("#window_" + taskname).css("display") == "none")
 			{
 				$("#window_" + taskname).css("display", "");
-				WinPHP.setActive(taskname);
+				winphp.setActive(taskname);
 			}
 			else
 			{
 				$("#window_" + taskname).css("display", "none");
-				WinPHP.removeActive(taskname);
+				winphp.removeActive(taskname);
 				if (bolActive)
 				{
 					// active task gets minimized, lets choose another
@@ -51,7 +51,7 @@ var WinPHP = new function()
 					{
 						if ($(this).css("display") != "none")
 						{
-							WinPHP.setActive($(this).prop("id").substr(7));
+							winphp.setActive($(this).prop("id").substr(7));
 							return false;
 						}
 					});
@@ -94,7 +94,7 @@ var WinPHP = new function()
 		{
 			// Fenster schlieﬂen
 			taskname = $(this).parents(".window").prop("id").substr(7);
-			WinPHP.closeWindow(taskname);
+			winphp.closeWindow(taskname);
 		});
 		$(document).on("mousedown", ".window_title_buttons#window_minimize", function(event)
 		{
@@ -103,7 +103,7 @@ var WinPHP = new function()
 			taskname = $(this).parents(".window").prop("id").substr(7);
 			$(this).parents(".window").css("display", "none");
 			bolActive = $("#window_" + taskname).hasClass("activetask");
-			WinPHP.removeActive(taskname);
+			winphp.removeActive(taskname);
 			if (bolActive)
 			{
 				// active task gets minimized, lets choose another
@@ -111,7 +111,7 @@ var WinPHP = new function()
 				{
 					if ($(this).css("display") != "none")
 					{
-						WinPHP.setActive($(this).prop("id").substr(7));
+						winphp.setActive($(this).prop("id").substr(7));
 						return true;
 					}
 				});
@@ -125,8 +125,8 @@ var WinPHP = new function()
 			if (!$(objwin).hasClass("maximized"))
 			{
 				// maximize
-				WinPHP.winpos[taskname + "_left"] = $(objwin).css("left");
-				WinPHP.winpos[taskname + "_top"] = $(objwin).css("top");
+				winphp.winpos[taskname + "_left"] = $(objwin).css("left");
+				winphp.winpos[taskname + "_top"] = $(objwin).css("top");
 				$(objwin).animate({
 					width : $("#winmain").width() + "px",
 					height : $("#winmain").height() + "px",
@@ -145,8 +145,8 @@ var WinPHP = new function()
 				$(objwin).animate({
 					width : "400px",
 					height : "300px",
-					left : WinPHP.winpos[taskname + "_left"],
-					top : WinPHP.winpos[taskname + "_top"]
+					left : winphp.winpos[taskname + "_left"],
+					top : winphp.winpos[taskname + "_top"]
 				}, 50, function()
 				{
 					$(objwin).removeClass("maximized");
@@ -158,7 +158,7 @@ var WinPHP = new function()
 		$(document).on("mousedown", ".window", function()
 		{
 			taskname = $(this).prop("id").substr(7);
-			WinPHP.setActive(taskname);
+			winphp.setActive(taskname);
 		});
 	}
 
@@ -172,7 +172,7 @@ var WinPHP = new function()
 		$(".task").each(function()
 		{
 			task = $(this).prop("id").substr(5);
-			WinPHP.removeActive(task);
+			winphp.removeActive(task);
 		});
 		$("#task_" + taskname).find("img").prop("src", "images/icon_active.png");
 		$("#task_" + taskname).addClass("activetask");
