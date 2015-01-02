@@ -1,7 +1,6 @@
 <?php 
 /*
- * WinPHP (c) crothhass 2013-2015
- * WinPHP is a Windows like PHP App thats fully customizable
+ * WinPHP (c) crothhass 2013-201
  */
 include 'config.php';
 include 'class/clsWinPhp.php';
