@@ -1,9 +1,10 @@
 /**
+ * WinPHP (c) crothhass 2013-2015
+ * 
  * Controller fuer WinPHP
  * 
  * TODO: Alle Fenster resizen bei resize, save window size, read modules and set
  * desktop icons, check if module has no app icon, arrange windows so that they are visible
- * wenn Task schon da, mach active
  * wenn Task nicht verfügbar, Fehlermeldung
  */
 $(document).ready(function()
@@ -196,36 +197,49 @@ var winphp = new function()
 			this.setActive(taskname);
 			return true;
 		}
-		var task = "";
-		task = '<div class="task" id="task_' + taskname + '" style="background-image:url(modules/' + taskname + '/icon_app_' + taskname + '.png)">';
-		task += '<img src="images/icon_active.png">';
-		task += '</div>';
 		
-		$("#wintaskbar").append(task);
-		
-		var window = "";
-		window = '<div class="window" id="window_' + taskname + '">';
-		window += '<div class="window_title">';
-		window += '<div class="window_title_string">' + ucfirst(taskname) + '</div>';
-		window += '<div class="window_title_buttons" id="window_close"><img src="images/window_button_close.png"></div>';
-		window += '<div class="window_title_buttons" id="window_maximize"><img src="images/window_button_maximize.png" width="10"></div>';
-		window += '<div class="window_title_buttons" id="window_minimize"><img src="images/window_button_minimize.png" width="10"></div>';
-		window += '</div>';
-		window += '<div class="window_content"></div>';
-		window += '</div>';
-		
-		$("#winmain").append(window);
-		$("#window_" + taskname + " div.window_content").css("height", ($("#window_" + taskname).height() - $("#window_" + taskname + " div.window_title").height() - 2) + "px");
-		
-		// Load content
-		$("#window_" + taskname + " div.window_content").load('modules/' + taskname + '/index_app_' + taskname + '.php', function()
+		// Check whether task is available
+		$.get('modules/' + taskname + '/index_app_' + taskname + '.php', function(windowContent, errormsg)
 		{
-			// Content loaded
+			// Content available
+			var task = "";
+			task = '<div class="task" id="task_' + taskname + '" style="background-image:url(modules/' + taskname + '/icon_app_' + taskname + '.png)">';
+			task += '<img src="images/icon_active.png">';
+			task += '</div>';
+			
+			$("#wintaskbar").append(task);
+			
+			var window = "";
+			window = '<div class="window" id="window_' + taskname + '">';
+			window += '<div class="window_title">';
+			window += '<div class="window_title_string">' + ucfirst(taskname) + '</div>';
+			window += '<div class="window_title_buttons" id="window_close"><img src="images/window_button_close.png"></div>';
+			window += '<div class="window_title_buttons" id="window_maximize"><img src="images/window_button_maximize.png" width="10"></div>';
+			window += '<div class="window_title_buttons" id="window_minimize"><img src="images/window_button_minimize.png" width="10"></div>';
+			window += '</div>';
+			window += '<div class="window_content">' + windowContent + '</div>';
+			window += '</div>';
+			
+			$("#winmain").append(window);
+			$("#window_" + taskname + " div.window_content").css("height", ($("#window_" + taskname).height() - $("#window_" + taskname + " div.window_title").height() - 2) + "px");
+			
+			winphp.addWindowFunctionality(taskname);
+			
+			winphp.setActive(taskname);
+		}).fail(function()
+		{
+			// Error
+			$("<div>Modul \"" + taskname + "\" konnte nicht geladen werden.</div>").dialog({
+				modal : true,
+				buttons : {
+					Ok : function()
+					{
+						$(this).dialog("close");
+					}
+				}
+			});
+			;
 		});
-		
-		this.addWindowFunctionality(taskname);
-		
-		this.setActive(taskname);
 	};
 	
 	this.addWindowFunctionality = function(taskname)
