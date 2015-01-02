@@ -1,6 +1,6 @@
 <?php 
 /*
- * winphp v0.1 (c) crothhass 2013
+ * winphp v0.2 (c) crothhass 2013-2015
  */
 include 'config.php';
 include 'class/clsWinPhp.php';

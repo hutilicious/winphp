@@ -1,4 +1,4 @@
-winphp v0.1 beta
+winphp v0.2 beta
 ======
 
 WinPHP is a Windows-like PHP application which is fully customizable.

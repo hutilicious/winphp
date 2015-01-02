@@ -151,7 +151,7 @@ var winphp = new function()
 				{
 					$(objwin).removeClass("maximized");
 					$(objwin).find("div.window_content").css("height", ($(objwin).height() - $(objwin).find("div.window_title").height() - 2) + "px");
-					addWindowFunctionality(taskname);
+					winphp.addWindowFunctionality(taskname);
 				});
 			}
 		});
@@ -191,7 +191,7 @@ var winphp = new function()
 
 	this.createWindow = function(taskname)
 	{
-		if ($("#task_"+taskname).length > 0)
+		if ($("#task_" + taskname).length > 0)
 		{
 			this.setActive(taskname);
 			return true;
@@ -217,6 +217,19 @@ var winphp = new function()
 		$("#winmain").append(window);
 		$("#window_" + taskname + " div.window_content").css("height", ($("#window_" + taskname).height() - $("#window_" + taskname + " div.window_title").height() - 2) + "px");
 		
+		// Load content
+		$("#window_" + taskname + " div.window_content").load('modules/' + taskname + '/index_app_' + taskname + '.php', function()
+		{
+			// Content loaded
+		});
+		
+		this.addWindowFunctionality(taskname);
+		
+		this.setActive(taskname);
+	};
+	
+	this.addWindowFunctionality = function(taskname)
+	{
 		$("#window_" + taskname).draggable({
 			containment : "parent",
 			handle : "div.window_title",
@@ -231,10 +244,8 @@ var winphp = new function()
 				$(this).find("div.window_content").css("height", ($(this).height() - $(this).find("div.window_title").height() - 2) + "px");
 			}
 		});
-		
-		this.setActive(taskname);
-	};
-	
+	}
+
 	this.closeWindow = function(taskname)
 	{
 		$("#task_" + taskname + ",#window_" + taskname).remove();
