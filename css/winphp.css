@@ -89,6 +89,34 @@ html, body {
 	margin-right: 3px;
 }
 
+#startmenu {
+	position: absolute;
+	display: none; z-index : 110;
+	top: 41px;
+	left: 1px;
+	min-width: 200px;
+	min-height: 100px;
+	height: auto;
+	width: auto;
+	z-index: 110; top : 41px; left : 1px; min-width : 200px; min-height :
+	100px; height : auto; width : auto;
+	border: 1px solid lightblue;
+	background: white;
+}
+
+#startmenu .startmenu_module {
+	cursor: pointer;
+	padding: 4px;
+}
+
+#startmenu .startmenu_module tr, #startmenu .startmenu_module td {
+	vertical-align: middle;
+}
+
+#startmenu .startmenu_module:hover {
+	background: #F3F3F3;
+}
+
 .window {
 	width: 400px;
 	height: 300px;
@@ -101,6 +129,7 @@ html, body {
 }
 
 .window div.window_title {
+	cursor:default;
 	line-height: 24px;
 	padding-left: 2px;
 	border: 1px solid lightgrey;

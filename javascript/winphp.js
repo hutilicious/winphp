@@ -3,14 +3,11 @@
  * 
  * Controller fuer WinPHP
  * 
- * TODO: Alle Fenster resizen bei resize, save window size, read modules and set
- * desktop icons, check if module has no app icon, arrange windows so that they are visible
- * wenn Task nicht verfügbar, Fehlermeldung
+ * TODO: Alle Fenster resizen bei resize, save window size, check if module has no app icon, arrange windows so that they are visible
  */
 $(document).ready(function()
 {
 	winphp.init();
-	winphp.createWindow("music");
 });
 
 //-------------------------------
@@ -33,6 +30,11 @@ var winphp = new function()
 		// -------------------------------
 		$(document).on("click", ".task", function(event)
 		{
+			if ($(".homebutton").hasClass("startmenuactive"))
+			{
+				$(".homebutton").removeClass("startmenuactive").css("background-image", "url(images/icon_winphp.png)");
+				$("#startmenu").css("display", "none");
+			}
 			// Fenster in den Vordergrund bringen + anzeigen
 			taskname = $(this).prop("id").substr(5);
 			bolActive = $("#window_" + taskname).hasClass("activetask");
@@ -76,16 +78,39 @@ var winphp = new function()
 		});
 		$(document).on("mouseover", ".homebutton", function(event)
 		{
-			$(this).css("background-image", "url(images/icon_winphp_glow.png)");
+			if (!$(".homebutton").hasClass("startmenuactive"))
+			{
+				$(this).css("background-image", "url(images/icon_winphp_glow.png)");
+			}
 		});
 		$(document).on("mouseout", ".homebutton", function(event)
 		{
-			$(this).css("background-image", "url(images/icon_winphp.png)");
+			if (!$(".homebutton").hasClass("startmenuactive"))
+			{
+				$(this).css("background-image", "url(images/icon_winphp.png)");
+			}
 		});
 		
 		$(document).on("click", ".homebutton", function(event)
 		{
-			// Todo Click on Home
+			if ($(this).hasClass("startmenuactive"))
+			{
+				$(this).removeClass("startmenuactive");
+				$(this).css("background-image", "url(images/icon_winphp.png)");
+			}
+			else
+			{
+				$(this).addClass("startmenuactive");
+				$(this).css("background-image", "url(images/icon_winphp_glow.png)");
+			}
+			$("#startmenu").toggle();
+		});
+		
+		$(document).on("click", ".startmenu_module", function(event)
+		{
+			winphp.createWindow($(this).data("module"));
+			$(".homebutton").removeClass("startmenuactive").css("background-image", "url(images/icon_winphp.png)");
+			$("#startmenu").css("display", "none");
 		});
 		
 		// -------------------------------
@@ -93,7 +118,7 @@ var winphp = new function()
 		// -------------------------------
 		$(document).on("mousedown", ".window_title_buttons#window_close", function()
 		{
-			// Fenster schließen
+			// Fenster schliessen
 			taskname = $(this).parents(".window").prop("id").substr(7);
 			winphp.closeWindow(taskname);
 		});
@@ -160,6 +185,12 @@ var winphp = new function()
 		{
 			taskname = $(this).prop("id").substr(7);
 			winphp.setActive(taskname);
+			
+			if ($(".homebutton").hasClass("startmenuactive"))
+			{
+				$(".homebutton").removeClass("startmenuactive").css("background-image", "url(images/icon_winphp.png)");
+				$("#startmenu").css("display", "none");
+			}
 		});
 	}
 
@@ -199,37 +230,53 @@ var winphp = new function()
 		}
 		
 		// Check whether task is available
-		$.get('modules/' + taskname + '/index_app_' + taskname + '.php', function(windowContent, errormsg)
+		$.getJSON('modules/' + taskname + '/config_mod_' + taskname + '.json', function(moduleCfg)
 		{
-			// Content available
-			var task = "";
-			task = '<div class="task" id="task_' + taskname + '" style="background-image:url(modules/' + taskname + '/icon_app_' + taskname + '.png)">';
-			task += '<img src="images/icon_active.png">';
-			task += '</div>';
-			
-			$("#wintaskbar").append(task);
-			
-			var window = "";
-			window = '<div class="window" id="window_' + taskname + '">';
-			window += '<div class="window_title">';
-			window += '<div class="window_title_string">' + ucfirst(taskname) + '</div>';
-			window += '<div class="window_title_buttons" id="window_close"><img src="images/window_button_close.png"></div>';
-			window += '<div class="window_title_buttons" id="window_maximize"><img src="images/window_button_maximize.png" width="10"></div>';
-			window += '<div class="window_title_buttons" id="window_minimize"><img src="images/window_button_minimize.png" width="10"></div>';
-			window += '</div>';
-			window += '<div class="window_content">' + windowContent + '</div>';
-			window += '</div>';
-			
-			$("#winmain").append(window);
-			$("#window_" + taskname + " div.window_content").css("height", ($("#window_" + taskname).height() - $("#window_" + taskname + " div.window_title").height() - 2) + "px");
-			
-			winphp.addWindowFunctionality(taskname);
-			
-			winphp.setActive(taskname);
+			$.get('modules/' + taskname + '/' + moduleCfg.module_index, function(windowContent)
+			{
+				// Content available
+				var task = "";
+				task = '<div class="task" id="task_' + taskname + '" style="background-image:url(modules/' + taskname + '/' + moduleCfg.module_icon + ')">';
+				task += '<img src="images/icon_active.png">';
+				task += '</div>';
+				
+				$("#wintaskbar").append(task);
+				
+				var window = "";
+				window = '<div class="window" id="window_' + taskname + '">';
+				window += '<div class="window_title">';
+				window += '<div class="window_title_string">' + moduleCfg.module_name + '</div>';
+				window += '<div class="window_title_buttons" id="window_close"><img src="images/window_button_close.png"></div>';
+				window += '<div class="window_title_buttons" id="window_maximize"><img src="images/window_button_maximize.png" width="10"></div>';
+				window += '<div class="window_title_buttons" id="window_minimize"><img src="images/window_button_minimize.png" width="10"></div>';
+				window += '</div>';
+				window += '<div class="window_content">' + windowContent + '</div>';
+				window += '</div>';
+				
+				$("#winmain").append(window);
+				$("#window_" + taskname + " div.window_content").css("height", ($("#window_" + taskname).height() - $("#window_" + taskname + " div.window_title").height() - 2) + "px");
+				
+				winphp.addWindowFunctionality(taskname);
+				
+				winphp.setActive(taskname);
+			}).fail(function()
+			{
+				// Error
+				$("<div>Inhalt f&uuml;r Modul \"" + taskname + "\" konnte nicht geladen werden.</div>").dialog({
+					modal : true,
+					buttons : {
+						Ok : function()
+						{
+							$(this).dialog("close");
+						}
+					}
+				});
+				;
+			});
 		}).fail(function()
 		{
 			// Error
-			$("<div>Modul \"" + taskname + "\" konnte nicht geladen werden.</div>").dialog({
+			$("<div>Konfiguration f&uuml;r Modul \"" + taskname + "\" konnte nicht geladen werden.</div>").dialog({
 				modal : true,
 				buttons : {
 					Ok : function()
